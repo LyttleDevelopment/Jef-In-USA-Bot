@@ -1,25 +1,18 @@
 import { getJefUser } from '../../utils/get-jef-user';
 import {
-  ActionRowBuilder,
-  ButtonBuilder,
   ButtonInteraction,
-  ButtonStyle,
   ForumChannel,
   Message,
   ThreadAutoArchiveDuration,
 } from 'discord.js';
-import {
-  FAMILY_FEED_CHANNEL_ID,
-  FRIENDS_FEED_CHANNEL_ID,
-  JEF_ID,
-} from '../../../constants';
+import { FAMILY_FEED_CHANNEL_ID, JEF_ID } from '../../../constants';
 import client from '../../main';
 import { log } from '../../utils';
 import { LogType } from '../../types';
 
 export let lastDate = new Date();
 export let waitingForFamilyFeed = false;
-export let waitingForFriendsFeed = false;
+export const waitingForFriendsFeed = false;
 export let waitingForFriendsFeedResponse = false;
 
 export let lastImages = [];
@@ -59,64 +52,64 @@ export async function requestDailyFamilyFeed() {
   waitingForFamilyFeed = true;
 }
 
-export async function requestWeeklyFriendsFeed() {
-  if (waitingForAnything()) return;
-
-  const user = getJefUser();
-  if (!user) {
-    return;
-  }
-
-  const message = {
-    content: '# Weekly Image Reminder! :technologist:',
-    embeds: [
-      {
-        description: 'Deze foto wordt enkel gestuurd naar de **vrienden**!',
-        title: 'Ik verwacht een foto van jou!',
-        color: 5025616, // Green
-      },
-    ],
-  };
-
-  await user.send(message);
-  waitingForFriendsFeed = true;
-}
-
-export async function askSameForFamily() {
-  if (waitingForAnything()) return;
-
-  const user = getJefUser();
-  if (!user) {
-    return;
-  }
-
-  const content = '## And your family? :house:';
-
-  const embeds = [
-    {
-      description: 'Mag ik die **vrienden** foto ook naar de familie sturen?',
-      title: 'Oh, en je familie?',
-      color: 10233776, // purple
-    },
-  ];
-
-  // Create the components.
-  const components = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder()
-      .setCustomId(SEND_FRIENDS_FEED_TO_FAMILY_YES)
-      .setLabel('Ja')
-      .setStyle(ButtonStyle.Success),
-    new ButtonBuilder()
-      .setCustomId(SEND_FRIENDS_FEED_TO_FAMILY_NO)
-      .setLabel('Nee')
-      .setStyle(ButtonStyle.Danger),
-  );
-
-  const message = { content, embeds, components: [components] };
-
-  await user.send(message);
-  waitingForFriendsFeedResponse = true;
-}
+// export async function requestWeeklyFriendsFeed() {
+//   if (waitingForAnything()) return;
+//
+//   const user = getJefUser();
+//   if (!user) {
+//     return;
+//   }
+//
+//   const message = {
+//     content: '# Weekly Image Reminder! :technologist:',
+//     embeds: [
+//       {
+//         description: 'Deze foto wordt enkel gestuurd naar de **vrienden**!',
+//         title: 'Ik verwacht een foto van jou!',
+//         color: 5025616, // Green
+//       },
+//     ],
+//   };
+//
+//   await user.send(message);
+//   waitingForFriendsFeed = true;
+// }
+//
+// export async function askSameForFamily() {
+//   if (waitingForAnything()) return;
+//
+//   const user = getJefUser();
+//   if (!user) {
+//     return;
+//   }
+//
+//   const content = '## And your family? :house:';
+//
+//   const embeds = [
+//     {
+//       description: 'Mag ik die **vrienden** foto ook naar de familie sturen?',
+//       title: 'Oh, en je familie?',
+//       color: 10233776, // purple
+//     },
+//   ];
+//
+//   // Create the components.
+//   const components = new ActionRowBuilder<ButtonBuilder>().addComponents(
+//     new ButtonBuilder()
+//       .setCustomId(SEND_FRIENDS_FEED_TO_FAMILY_YES)
+//       .setLabel('Ja')
+//       .setStyle(ButtonStyle.Success),
+//     new ButtonBuilder()
+//       .setCustomId(SEND_FRIENDS_FEED_TO_FAMILY_NO)
+//       .setLabel('Nee')
+//       .setStyle(ButtonStyle.Danger),
+//   );
+//
+//   const message = { content, embeds, components: [components] };
+//
+//   await user.send(message);
+//   waitingForFriendsFeedResponse = true;
+// }
 
 export async function onJefButtonInteraction(
   userId: string,
@@ -160,12 +153,12 @@ export async function onJefImage(userId: string, message: Message) {
     return;
   }
 
-  if (waitingForFriendsFeed) {
-    waitingForFriendsFeed = false;
-    await sendFeed(FRIENDS_FEED_CHANNEL_ID, message.content, images);
-    await askSameForFamily();
-    return;
-  }
+  // if (waitingForFriendsFeed) {
+  //   waitingForFriendsFeed = false;
+  //   await sendFeed(FRIENDS_FEED_CHANNEL_ID, message.content, images);
+  //   await askSameForFamily();
+  //   return;
+  // }
 }
 
 export async function sendFeed(
@@ -203,10 +196,10 @@ async function checkFeed() {
       lastDate = date;
       log(LogType.INFO, 'Sending feeds.');
       // if day is saturday
-      if (date.getDay() == 6) {
-        await requestWeeklyFriendsFeed();
-        return;
-      }
+      // if (date.getDay() == 6) {
+      //   await requestWeeklyFriendsFeed();
+      //   return;
+      // }
       await requestDailyFamilyFeed();
     }
   } catch (error) {
