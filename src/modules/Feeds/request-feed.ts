@@ -21,16 +21,16 @@ export let lastMessage = '';
 const SEND_FRIENDS_FEED_TO_FAMILY_YES = 'send_friends_feed_to_family_yes';
 const SEND_FRIENDS_FEED_TO_FAMILY_NO = 'send_friends_feed_to_family_no';
 
-function waitingForAnything() {
-  return (
-    waitingForFamilyFeed ||
-    waitingForFriendsFeed ||
-    waitingForFriendsFeedResponse
-  );
-}
+// function waitingForAnything() {
+//   return (
+//     waitingForFamilyFeed ||
+//     waitingForFriendsFeed ||
+//     waitingForFriendsFeedResponse
+//   );
+// }
 
 export async function requestDailyFamilyFeed() {
-  if (waitingForAnything()) return;
+  // if (waitingForAnything()) return;
 
   const user = getJefUser();
   if (!user) {
